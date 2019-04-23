@@ -36,8 +36,6 @@ spec:
         container('docker') {
             withCredentials([usernamePassword(credentialsId: 'docker_registry_credentials',
                             usernameVariable: 'DOCKER_REGISTRY_USERNAME',passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
-
-
                 sh '''
                     set +x
                     docker login --username "$DOCKER_REGISTRY_USERNAME" --password "$DOCKER_REGISTRY_PASSWORD"
@@ -60,7 +58,7 @@ spec:
          container('helm') {
 
             withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-                  sh "helm upgrade --install --set image.repositoryAndTag=${IMAGE_WITH_TAG} ./helloworld-chart hello-world"
+                  sh "helm upgrade --install --set image.repositoryAndTag=${IMAGE_WITH_TAG} hello-world ./helloworld-chart "
             }
         }
     }
