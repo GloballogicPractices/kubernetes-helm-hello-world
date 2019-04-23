@@ -1,6 +1,6 @@
 def label = "kubectl-${UUID.randomUUID().toString()}"
 
-def IMAGE_WITH_TAG = "globallogicpractices/opengine-base:helm-hello-world-${BUILD_NUMBER}"
+
 
 podTemplate(label: label, yaml: """
 apiVersion: v1
@@ -26,6 +26,8 @@ spec:
 """
   ){
   node(label) {
+
+    def IMAGE_WITH_TAG = "globallogicpractices/opengine-base:helm-hello-world-${BUILD_NUMBER}"
     stage('Build') {
         git        branch: 'master',
           credentialsId: 'git-akopachevskyy-globallogic',
@@ -34,6 +36,8 @@ spec:
         container('docker') {
             withCredentials([usernamePassword(credentialsId: 'docker_registry_credentials',
                             usernameVariable: 'DOCKER_REGISTRY_USERNAME',passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
+
+
                 sh '''
                     set +x
                     docker login --username "$DOCKER_REGISTRY_USERNAME" --password "$DOCKER_REGISTRY_PASSWORD"
