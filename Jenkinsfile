@@ -38,10 +38,11 @@ spec:
                     set +x
                     docker login --username "$DOCKER_REGISTRY_USERNAME" --password "$DOCKER_REGISTRY_PASSWORD"
                     docker build -t opengine-jenkins .
-                    docker tag opengine-jenkins ${IMAGE_WITH_TAG}
-                    docker push ${IMAGE_WITH_TAG}
-                    docker rmi ${IMAGE_WITH_TAG}
                 '''
+                sh "docker tag opengine-jenkins ${IMAGE_WITH_TAG}"
+                sh "docker push ${IMAGE_WITH_TAG}"
+                sh "docker rmi ${IMAGE_WITH_TAG}"
+
             }
         }
     }
