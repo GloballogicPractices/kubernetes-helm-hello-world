@@ -28,16 +28,14 @@ spec:
   node(label) {
     println(scm.getUserRemoteConfigs())
     def IMAGE_WITH_TAG = "globallogicpractices/opengine-base:helm-hello-world-${BUILD_NUMBER}"
+    stage('Checkout'){
+        checkout scm
+    }
     stage('Build') {
-        git        branch: 'master',
-          credentialsId: 'git-akopachevskyy-globallogic',
-                    url: 'git@github.com:GloballogicPractices/kubernetes-helm-hello-world.git'
-
         container('docker') {
             withCredentials([usernamePassword(credentialsId: 'docker_registry_credentials',
                             usernameVariable: 'DOCKER_REGISTRY_USERNAME',passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
                 sh '''
-                    set +x
                     docker login --username "$DOCKER_REGISTRY_USERNAME" --password "$DOCKER_REGISTRY_PASSWORD"
                     docker build -t opengine-jenkins .
                 '''
@@ -50,11 +48,6 @@ spec:
     }
 
     stage('Deploy') {
-
-         git        branch: 'master',
-         credentialsId: 'git-akopachevskyy-globallogic',
-                    url: 'git@github.com:GloballogicPractices/kubernetes-helm-hello-world.git'
-
          container('helm') {
 
             withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
