@@ -26,22 +26,17 @@ spec:
 """
   ){
   node(label) {
-    def IMAGE_WITH_TAG = "globallogicpractices/opengine-base:helm-hello-world-${BUILD_NUMBER}"
+    def IMAGE_NAME = "volodymyrilov/kube-simple"
+    def IMAGE_TAG = ${BUILD_NUMBER}
     stage('Checkout'){
         checkout scm
     }
     stage('Build') {
         container('docker') {
-            withCredentials([usernamePassword(credentialsId: 'docker_registry_credentials',
-                            usernameVariable: 'DOCKER_REGISTRY_USERNAME',passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
-                sh '''
-                    docker login --username "$DOCKER_REGISTRY_USERNAME" --password "$DOCKER_REGISTRY_PASSWORD"
-                    docker build -t opengine-jenkins .
-                '''
-                sh "docker tag opengine-jenkins ${IMAGE_WITH_TAG}"
-                sh "docker push ${IMAGE_WITH_TAG}"
-                sh "docker rmi ${IMAGE_WITH_TAG}"
-
+            withDockerRegistry([credentialsId: 'docker_registry_credentials']){
+                def customImage = docker.build(IMAGE_NAME)
+                customImage.push("${env.BUILD_NUMBER}")
+                customImage.push("latest")
             }
         }
     }
