@@ -26,7 +26,6 @@ spec:
 """
   ){
   node(label) {
-    println(scm.getUserRemoteConfigs())
     def IMAGE_WITH_TAG = "globallogicpractices/opengine-base:helm-hello-world-${BUILD_NUMBER}"
     stage('Checkout'){
         checkout scm
