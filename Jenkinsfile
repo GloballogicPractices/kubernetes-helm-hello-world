@@ -31,7 +31,7 @@ spec:
     }
     stage('Build') {
         container('docker') {
-            withDockerRegistry([credentialsId: ${DOCKER_REGESTRY_CREDENTIALS}]){
+            withDockerRegistry([credentialsId: "${DOCKER_REGESTRY_CREDENTIALS}"]){
                 def customImage = docker.build("${IMAGE_NAME}")
                 customImage.push("${env.BUILD_NUMBER}")
                 customImage.push("latest")
