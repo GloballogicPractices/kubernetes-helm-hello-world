@@ -26,16 +26,14 @@ spec:
 """
   ){
   node(label) {
-    def IMAGE_NAME = "volodymyrilov/kube-simple"
-    def IMAGE_TAG = "${env.BUILD_NUMBER}"
     stage('Checkout'){
         checkout scm
     }
     stage('Build') {
         container('docker') {
             withDockerRegistry([credentialsId: 'docker_registry_credentials']){
-                def customImage = docker.build(IMAGE_NAME)
-                customImage.push(IMAGE_TAG)
+                def customImage = docker.build("${IMAGE_NAME}")
+                customImage.push("${env.BUILD_NUMBER}")
                 customImage.push("latest")
             }
         }
@@ -45,7 +43,7 @@ spec:
          container('helm') {
 
             withCredentials([file(credentialsId: "kube-config-${TARGET_CLUSTER}", variable: 'KUBECONFIG')]) {
-                  sh "helm upgrade --install --set image.repositoryAndTag=${IMAGE_NAME}:latest hello-world ./helloworld-chart "
+                  sh "helm upgrade --install --set image.repositoryAndTag="${IMAGE_NAME}":latest hello-world ./helloworld-chart "
             }
         }
     }
