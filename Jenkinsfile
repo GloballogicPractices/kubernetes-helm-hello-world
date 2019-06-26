@@ -43,7 +43,7 @@ spec:
          container('helm') {
 
             withCredentials([file(credentialsId: "kube-config-${TARGET_CLUSTER}", variable: 'KUBECONFIG')]) {
-                  sh "helm upgrade --install --set image.repositoryAndTag="${IMAGE_NAME}":latest hello-world ./helloworld-chart "
+                  sh "helm upgrade --install --set image.repositoryAndTag=${IMAGE_NAME}:latest hello-world ./helloworld-chart "
             }
         }
     }
